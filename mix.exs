@@ -1,33 +1,43 @@
 defmodule PgContrivance.Mixfile do
   use Mix.Project
 
+  @version "0.10.1"
+
   def project do
     [app: :pg_contrivance,
-     version: "0.0.1",
+     description: description,
+     version: @version,
      elixir: "~> 1.2",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
-     deps: deps]
+     # ExDoc
+     name: "PgContrivance",
+     source_url: "https://github.com/plamb/pg_contrivance",
+     docs: [source_ref: "v#{@version}", main: PgContrivance.Run, extras: ["README.md"]],
+     deps: deps,
+   package: package]
   end
 
-  # Configuration for the OTP application
-  #
-  # Type "mix help compile.app" for more information
   def application do
-    [applications: [:logger],
+    [applications: [:logger, :postgrex],
      mod: {PgContrivance, []}]
   end
 
-  # Dependencies can be Hex packages:
-  #
-  #   {:mydep, "~> 0.3.0"}
-  #
-  # Or git/path repositories:
-  #
-  #   {:mydep, git: "https://github.com/elixir-lang/mydep.git", tag: "0.1.0"}
-  #
-  # Type "mix help deps" for more examples and options
   defp deps do
-    []
+    [{:postgrex, "~> 0.10.0"},
+     {:ex_doc, "~> 0.11.2", only: [:dev, :docs]},
+     {:earmark, "~> 0.2.0", only: [:dev, :docs]},
+     {:credo, "~> 0.2.5", only: [:dev, :test]}]
   end
+
+  def package do
+    [maintainers: ["Paul Lamb"],
+     licenses: ["New BSD"],
+     links: %{"GitHub" => "https://github.com/plamb/pg_contrivance"}]
+  end
+
+  defp description do
+    "A layer on top of postgrex for exploiting the power of Postgresql and SQL."
+  end
+
 end

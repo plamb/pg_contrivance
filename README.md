@@ -3,6 +3,8 @@
 This is a layer of useful tooling on
 top of [postgrex](https://github.com/ericmj/postgrex). While [Ecto](https://github.com/elixir-lang/ecto) does everything to hide the database from you and [Moebius](https://github.com/robconery/moebius) does a good job of creating a simple SQL dsl, Contrivance looks to exploit Postgresql's capabilities without abstracting the SQL away, in fact, it pretty much revels in the glory of plain old SQL strings and looks to utilize Postgresql specific functionality.
 
+Much of Contrivance was thought up as an addition to Moebius but I kept thinking that it would be best as a standalone library that was only dependent on Postgrex and useable in both Ecto and Mobius apps too.
+
 Functionality:
 
 - [ ] run sql string (the very basics)
@@ -14,7 +16,7 @@ Functionality:
 - [ ] much more...
 
 ## Acknowledgements
-Initially Contrivance steals/copies and liberally imitates concepts from [Moebius](https://github.com/robconery/moebius), particularly the Moebius.Runner and bulk-insert code (thanks [John Atten](https://github.com/xivSolutions)). If it wasn't for Rob's (both [Conery](https://github.com/robconery) and [Sullivan](https://github.com/datachomp)) and [Johnny Winn's](https://github.com/nurugger07) I would have never even thought about pursing my own thoughts of how I wanted a library to work or even started to code it. Their I can do anything attitude is infectious.
+Initially Contrivance steals/copies and liberally imitates concepts from [Moebius](https://github.com/robconery/moebius), particularly the Moebius.Runner and bulk-insert code (thanks [John Atten](https://github.com/xivSolutions)). If it wasn't for Rob's (both [Conery](https://github.com/robconery) and [Sullivan](https://github.com/datachomp)) and [Johnny Winn](https://github.com/nurugger07) I would have never even thought about pursing my own thoughts of how I wanted a library to work or even started to code it. Their "I can do anything" attitude is quite infectious.
 
 ## Warning/Versions
 This is experimental and highly dependent on [postgrex](https://github.com/ericmj/postgrex). Right now we are using Postgrex v0.10.0 but as functionality evolves changes there, it may cause breaking changes here. As time goes on, I will try to keep a feature matrix of what versions work with what version of Postgrex.
