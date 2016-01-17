@@ -24,7 +24,7 @@ defmodule PgContrivance.Mixfile do
   end
 
   defp deps do
-    [{:postgrex, "~> 0.10.0"},
+    [{:postgrex, github: "ericmj/postgrex", ref: "38eae1a9375af08688e8a421c26df533b67fed22"}, # updated 1/16/2016 from head of master
      {:ex_doc, "~> 0.11.2", only: [:dev, :docs]},
      {:earmark, "~> 0.2.0", only: [:dev, :docs]},
      {:credo, "~> 0.2.5", only: [:dev, :test]}]

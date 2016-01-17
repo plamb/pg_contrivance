@@ -1,8 +1,8 @@
-defmodule PgContrivanceTest do
-  use ExUnit.Case
-  doctest PgContrivance
-
-  test "the truth" do
-    assert 1 + 1 == 2
-  end
-end
+# defmodule PgContrivanceTest do
+#   use ExUnit.Case
+#   doctest PgContrivance
+#
+#   test "the truth" do
+#     assert 1 + 1 == 2
+#   end
+# end
