@@ -1,19 +1,10 @@
 defmodule PgContrivance do
   use Application
 
-  # See http://elixir-lang.org/docs/stable/elixir/Application.html
-  # for more information on OTP Applications
-  def start(_type, _args) do
-    import Supervisor.Spec, warn: false
-
-    children = [
-      # Define workers and child supervisors to be supervised
-      # worker(PgContrivance.Worker, [arg1, arg2, arg3]),
-    ]
-
-    # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html
-    # for other strategies and supported options
-    opts = [strategy: :one_for_one, name: PgContrivance.Supervisor]
-    Supervisor.start_link(children, opts)
+  # taken from Ecto until I figure out if I need to do this differently
+  # https://github.com/elixir-lang/ecto/blob/master/lib/ecto/application.ex
+  def start,  do: start(:normal, [])
+  def start(type, args) do
+    PgContrivance.Supervisor.start_link(type, args)
   end
 end

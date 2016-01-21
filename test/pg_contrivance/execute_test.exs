@@ -1,6 +1,6 @@
 defmodule PgContrivance.ExecuteTest do
   use ExUnit.Case
-  import PgContrivance.Base
+  import PgContrivance.Runner
 
   # setup do
   #   db(:users) |> insert(email: "flippy@test.com", first: "Flip", last: "Sullivan")
@@ -16,5 +16,11 @@ defmodule PgContrivance.ExecuteTest do
     assert {:ok, %Postgrex.Result{num_rows: 3}} =
       query "select id, email, first, last from users limit 3", []
   end
+
+  test "test a query with a date" do
+    assert {:ok, %Postgrex.Result{num_rows: 3}} =
+      query "select ('2014-01-01'::date - interval '23 hours')::text;", []
+  end
+
 
 end
