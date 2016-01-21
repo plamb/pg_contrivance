@@ -25,12 +25,26 @@ defmodule PgContrivance.Runner do
   @doc """
   If there isn't a connection process started then one is added to the command
   """
-  def query(statement, params, opts \\ []) do
+
+  def query(statement, params, opts \\ []) when is_binary(statement) and is_list(params) do
     Postgrex.query(@name, statement, params, opts)
   end
 
-  def query!(statement, params, opts \\ []) do
+  def query!(statement, params, opts \\ []) when is_binary(statement) and is_list(params) do
     Postgrex.query!(@name, statement, params, opts)
   end
+
+  def transaction(statement, params, opts \\ []) when is_binary(statement) and is_list(params) do
+    case Postgrex.transaction(@name, fn(conn) -> Postgrex.query(conn, statement, params, opts) end) do
+      {:ok, _res} = result -> result
+      {:error, _err} -> Postgrex.transaction(@name, fn(conn) ->
+        DBConnection.rollback(conn, :oops)
+        IO.puts "TRANSACTION FAILED - ROLLINGBACK"
+      end)
+    end
+  end
+
+
+
 
 end
