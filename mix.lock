@@ -1,7 +1,7 @@
 %{"backoff": {:hex, :backoff, "1.1.1"},
   "bunt": {:hex, :bunt, "0.1.4"},
   "connection": {:hex, :connection, "1.0.2"},
-  "credo": {:hex, :credo, "0.2.5"},
+  "credo": {:hex, :credo, "0.3.0-dev"},
   "db_connection": {:hex, :db_connection, "0.2.0"},
   "decimal": {:hex, :decimal, "1.1.1"},
   "earmark": {:hex, :earmark, "0.2.1"},

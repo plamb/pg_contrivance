@@ -1,4 +1,6 @@
 defmodule PgContrivance do
+  @moduledoc false
+
   use Application
 
   # taken from Ecto until I figure out if I need to do this differently

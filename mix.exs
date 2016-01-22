@@ -28,7 +28,7 @@ defmodule PgContrivance.Mixfile do
      {:poolboy, "~> 1.5"},
      {:ex_doc, "~> 0.11.2", only: [:dev, :docs]},
      {:earmark, "~> 0.2.0", only: [:dev, :docs]},
-     {:credo, "~> 0.2.5", only: [:dev, :test]}]
+     {:credo, "~> 0.3.0-dev", only: [:dev, :test]}]
   end
 
   def package do
