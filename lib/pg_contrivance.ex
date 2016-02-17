@@ -35,7 +35,7 @@ defmodule PgContrivance do
   ```
   """
 
-  def params(%SqlCommand{} = cmd, params) when is_binary(params),
+  def params(%SqlCommand{} = cmd, params) when is_list(params),
     do: %SqlCommand{cmd | params: params}
 
   def params(%SqlCommand{} = cmd, params) when is_map(params),

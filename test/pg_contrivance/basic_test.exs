@@ -23,4 +23,13 @@ defmodule PgContrivance.BasicTest do
         |> to_list(keys: :atoms)
   end
 
+  test "basic select with params to list" do
+    assert [%{"email" => "mike@test.com", "first" => "Mike", "last" => "Ghruoisl"}] =
+        sql("SELECT first, last, email FROM USERS WHERE first = $1")
+        |> params(["Mike"])
+        |> query
+        |> to_list
+  end
+
+
 end
