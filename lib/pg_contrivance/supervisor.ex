@@ -11,7 +11,7 @@ defmodule PgContrivance.Supervisor do
     Application.get_env(:pg_contrivance, :connection) |> validate_connection_args
 
     children = [
-      worker(PgContrivance.Runner, [])
+      worker(PgContrivance.Postgres, [])
     ]
 
     # See http://elixir-lang.org/docs/stable/Supervisor.Behaviour.html

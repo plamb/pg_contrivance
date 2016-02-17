@@ -1,10 +1,12 @@
-%{"backoff": {:hex, :backoff, "1.1.1"},
-  "bunt": {:hex, :bunt, "0.1.4"},
+%{"bunt": {:hex, :bunt, "0.1.4"},
   "connection": {:hex, :connection, "1.0.2"},
-  "credo": {:hex, :credo, "0.3.0-dev"},
-  "db_connection": {:hex, :db_connection, "0.2.0"},
+  "credo": {:hex, :credo, "0.3.2"},
+  "db_connection": {:hex, :db_connection, "0.2.3"},
   "decimal": {:hex, :decimal, "1.1.1"},
   "earmark": {:hex, :earmark, "0.2.1"},
-  "ex_doc": {:hex, :ex_doc, "0.11.3"},
+  "ex_doc": {:hex, :ex_doc, "0.11.4"},
+  "inch_ex": {:hex, :inch_ex, "0.5.1"},
+  "poison": {:hex, :poison, "2.1.0"},
   "poolboy": {:hex, :poolboy, "1.5.1"},
-  "postgrex": {:git, "https://github.com/ericmj/postgrex.git", "38eae1a9375af08688e8a421c26df533b67fed22", []}}
+  "postgrex": {:git, "https://github.com/ericmj/postgrex.git", "f5b1cc590cf5160d5d5390c4d3653babffc8702d", []},
+  "sbroker": {:hex, :sbroker, "0.7.0"}}

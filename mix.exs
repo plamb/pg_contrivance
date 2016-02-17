@@ -1,7 +1,7 @@
 defmodule PgContrivance.Mixfile do
   use Mix.Project
 
-  @version "0.10.1"
+  @version "0.11.1-dev"
 
   def project do
     [app: :pg_contrivance,
@@ -26,9 +26,14 @@ defmodule PgContrivance.Mixfile do
   defp deps do
     [{:postgrex, github: "ericmj/postgrex"},
      {:poolboy, "~> 1.5"},
-     {:ex_doc, "~> 0.11.2", only: [:dev, :docs]},
+     # Docs
+     {:ex_doc, "~> 0.11.4", only: [:dev, :docs]},
      {:earmark, "~> 0.2.0", only: [:dev, :docs]},
-     {:credo, "~> 0.3.0-dev", only: [:dev, :test]}]
+     {:inch_ex, ">= 0.0.0", only: :docs},
+     # Test/Analysis
+     {:credo, "~> 0.3.2", only: [:dev, :test]},
+     # Optional
+     {:sbroker, "~> 0.7", optional: true}]
   end
 
   def package do

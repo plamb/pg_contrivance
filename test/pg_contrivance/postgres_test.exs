@@ -1,6 +1,6 @@
-defmodule PgContrivance.RunnerTest do
+defmodule PgContrivance.PostgresTest do
   use ExUnit.Case
-  import PgContrivance.Runner
+  import PgContrivance.Postgres
 
   # setup do
   #   db(:users) |> insert(email: "flippy@test.com", first: "Flip", last: "Sullivan")
@@ -37,7 +37,7 @@ defmodule PgContrivance.RunnerTest do
 # end
 
   test "query inside a transaction" do
-    assert {:ok, %Postgrex.Result{num_rows: 3}} =
+    assert {:ok, %Postgrex.Result{num_rows: 1}} =
       transaction("select id, email, first, last from users LIMIT 1",[])
   end
 end

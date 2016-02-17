@@ -1,5 +1,5 @@
 defmodule PgContrivance.Psql do
-  alias PgContrivance.Runner
+  alias PgContrivance.Postgres
   @moduledoc """
   Allows you to call command line psql with arguments of either a set of sql statements
   ad a string or a filename to pass as a parameter.
@@ -13,13 +13,13 @@ currently. These functions hand off to PSQL because Postgrex can't run more than
 one command per query.
 """
 def run_with_psql(sql, db \\ nil) do
-  db = db || Runner.connection_options()[:database]
+  db = db || Postgres.connection_options()[:database]
   ["-d", db, "-c", sql, "--quiet", "--set", "ON_ERROR_STOP=1", "--no-psqlrc"]
   |> call_psql
 end
 
 def run_file_with_psql(file, db \\ nil) do
-  db = db || Runner.connection_options()[:database]
+  db = db || Postgres.connection_options()[:database]
 
   ["-d", db, "-f", file, "--quiet", "--set", "ON_ERROR_STOP=1", "--no-psqlrc"]
   |> call_psql

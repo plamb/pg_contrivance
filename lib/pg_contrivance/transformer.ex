@@ -1,63 +1,48 @@
 defmodule PgContrivance.Transformer do
   @moduledoc """
-  The results that come back from Postgrex are in a bit of a convoluted form with string key maps that aren't terribly useful.
-  This module restructures the results.
+  The results that come back from Postgrex are in a `%Postgrex.Result{}` i.e.:
+
+  ```
+  {:ok, %Postgrex.Result{columns: ["id", "email", "first", "last"],
+         command: :select, connection_id: 10298, num_rows: 1,
+         rows: [[1, "rob@test.com", "Rob", "Blah"]]}}
+  ```
+
+  This combines the columns and rows into a list of maps, i.e.:
+
+  ```
+  to_map(...)
+  [%{"id" => 1, "email" => "rob@test.com", "first" => "Rob", "last" => "Blah"}]
+
+  to_map(..., keys: :atoms)
+  [%{id: 1, email: "rob@test.com", first: "Rob", last: "Blah"}]
+  ```
   """
 
-  def to_atom_map(map) do
-    Enum.reduce(map, %{}, fn ({key, val}, acc) -> Map.put(acc, String.to_atom(key), val) end)
-  end
-
-  @doc """
-  String keys are a pain, atom maps are nicer
-  """
-  def to_map(list, acc \\ %{})
-  def to_map([], acc), do: acc
-  def to_map([{key, val}|rest], acc) when is_list(val) do
-    val = to_map(val, %{})
-    acc = Map.put(acc, String.to_atom(key), [val])
-    to_map(rest, acc)
-  end
-  def to_map([{key, val}|rest], acc) do
-    acc = Map.put(acc, String.to_atom(key), val)
-    to_map(rest, acc)
-  end
 
   @doc """
-  Coerce a large result set into an array of atom-keyed maps
+
   """
-  def to_list({:error, err}), do: {:error, err}
-  def to_list({:ok, %{rows: nil}}), do: []
-  def to_list({:ok, %{rows: rows, columns: cols}}) do
+  def to_list(%Postgrex.Result{} = results) do
+    create_list(results.columns, results.rows)
+  end
+
+  def to_list(%Postgrex.Result{} = results, keys: :atoms) do
+    create_list(results.columns, results.rows, keys: :atoms)
+  end
+
+
+  defp create_list(columns, rows) do
     Enum.map rows, fn(r) ->
-      {cols, r}
-      |> zip_columns_and_row
-      |> to_map
+      Enum.zip(columns,r) |> Enum.into(Map.new)
     end
   end
 
-  @doc """
-  Coerces a Postgrex.Result into a single atom-keyed map
-  """
-  def to_single({:error, err}), do: {:error, err}
-  def to_single({:ok, %{command: :delete, num_rows: count}}),
-    do: %{deleted: count}
-
-  def to_single({:ok, %{num_rows: count}}) when count == 0,
-    do: nil
-  def to_single({:ok, %{num_rows: count} = res}) when count > 0 do
-    res
-    |> get_first_result
-    |> zip_columns_and_row
-    |> to_map
+  defp create_list(columns, rows, keys: :atoms) do
+    Enum.map rows, fn(r) ->
+      Enum.zip(columns,r) |> Enum.into(Map.new, fn {key, value} -> {String.to_atom(key), value} end )
+    end
   end
 
-  defp get_first_result(%{columns: cols, rows: rows}) do
-    [first_row | _] = rows
-    {cols, first_row}
-  end
-
-  defp zip_columns_and_row({cols, row}),
-    do: List.zip([cols,row])
 
 end

@@ -1,13 +1,14 @@
 # PgContrivance
 
 This is a layer of useful tooling on
-top of [postgrex](https://github.com/ericmj/postgrex). While [Ecto](https://github.com/elixir-lang/ecto) does everything to hide the database from you and [Moebius](https://github.com/robconery/moebius) does a good job of creating a simple SQL dsl, Contrivance looks to exploit Postgresql's capabilities without abstracting the SQL away, in fact, it pretty much revels in the glory of plain old SQL strings and looks to utilize Postgresql specific functionality.
+top of [postgrex](https://github.com/ericmj/postgrex). For a high-level database wrapper look to [Ecto](https://github.com/elixir-lang/ecto) and [Moebius](https://github.com/robconery/moebius) does a good job of creating a direct, easy-to-use SQL dsl. PgContrivance looks to exploit Postgresql's capabilities without abstracting the SQL away, in fact, it pretty much revels in the glory of plain old SQL strings and looks to exploit Postgresql specific functionality.
 
-Much of Contrivance was thought up as an addition to Moebius but I kept thinking that it would be best as a standalone library that was only dependent on Postgrex and useable in both Ecto and Mobius apps too.
+Much of PgContrivance was thought up as an addition to Moebius but I kept thinking that it would be best as a standalone library that was only dependent on Postgrex and useable in both Ecto and Mobius apps too.
 
 Functionality:
 
-- [ ] run sql string (the very basics)
+- [x] execute sql queries with params
+- [x] execute sql queries with params with transaction
 - [ ] bulk insert
 - [ ] named parameters in query strings
 - [ ] work with [Geo](https://github.com/bryanjos/geo)
@@ -16,12 +17,13 @@ Functionality:
 - [ ] much more...
 
 ## Acknowledgements
-Initially Contrivance steals/copies and liberally imitates concepts from [Moebius](https://github.com/robconery/moebius), particularly the Moebius.Runner and bulk-insert code (thanks [John Atten](https://github.com/xivSolutions)). If it wasn't for Rob's (both [Conery](https://github.com/robconery) and [Sullivan](https://github.com/datachomp)) and [Johnny Winn](https://github.com/nurugger07) I would have never even thought about pursing my own thoughts of how I wanted a library to work or even started to code it. Their "I can do anything" attitude is quite infectious.
+Initially PgContrivance steals/copies and liberally imitates concepts from [Moebius](https://github.com/robconery/moebius), particularly the Moebius.Runner and bulk-insert code (thanks [John Atten](https://github.com/xivSolutions)). If it wasn't for Rob's (both [Conery](https://github.com/robconery) and [Sullivan](https://github.com/datachomp)) and [Johnny Winn](https://github.com/nurugger07) I would have never even thought about pursing my own thoughts of how I wanted a library to work or even started to code it. Their "I can do anything" attitude is quite infectious.
 
 ## Warning/Versions
-This is experimental and highly dependent on [postgrex](https://github.com/ericmj/postgrex). Right now I'm using Postgrex v0.11-dev but as functionality evolves and changes there, it may cause breaking changes here. As time goes on, I will try to keep a feature matrix of what versions work with what version of Postgrex.
+This is very much in development and highly dependent on [postgrex](https://github.com/ericmj/postgrex). PgContrivance uses Postgrex v0.11 but as functionality evolves and changes there, it may cause breaking changes here. As time goes on, I will try to keep a feature matrix of what versions work with what version of Postgrex.
 
-I thought a lot about using the Erlang Postgresql driver [epsql](https://github.com/epgsql/epgsql) but decided that almost everyone working on a Elixir application would already be using Postgrex with Ecto or Moebius and another dependency was not worth it.
+Right now I'm using a version scheme like postgrex-major.postgrex-minor-contrivance-version. i.e. 0.11.1. This is very much subject to change.
+
 
 ## Installation
 
@@ -30,11 +32,68 @@ The package is not in Hex yet, it can be used by accessing it from github:
   1. Add pg_contrivance to your list of dependencies in `mix.exs`:
 
         def deps do
-          [{:pg_contrivance, github: "plamb/pg_contrivance"}]
+          [{:pg_contrivance, github: "plamb/pg_contrivance"},
+           {:postgrex, "~> 0.11"},
+           {:poolboy, "~> 1.5"}]
         end
 
   2. Ensure pg_contrivance is started before your application:
 
         def application do
-          [applications: [:pg_contrivance]]
+          [applications: [:poolboy, :postgrex, :pg_contrivance]]
         end
+
+## Configuration
+You'll need to have a configuration block for the database connection.
+
+        config :pg_contrivance,
+          connection: [database: "contrived", pool_mod: DBConnection.Poolboy]
+
+Withing the connection key you can specify any of the normal Postgrex connection options.
+
+[Note: You will need to specify the pool_mod-this will become a default soon].
+
+
+## Using PgContrivance
+The api utilizes a %SqlCommand{} struct to make usage a bit more Elixir like (and will be quite familiar to Moebius users) that allow us to pipeline commands and results.
+
+  ```ex
+  sql "SELECT name, email FROM USERS"
+  |> query
+  |> to_keyword_list
+
+  query "SELECT name, email FROM USERS"
+  |> to_hash_list
+
+  sql "SELECT name, email FROM users WHERE username = $1"
+  |> params ["bob@acme.com"]
+  |> query
+  |> to_keyword_list
+  ```
+
+With named parameter conversion:
+
+  ```ex
+  sql("SELECT name, email FROM users WHERE username = :username")
+  |> params(%{username: "bob@acme.com"})
+  |> query
+  |> to_hash_list
+  ```
+
+
+## Very Low-level API
+At it's most basic PgContrivance is a VERY thin wrapper around Postgrex.query, query! and transaction. All of the low-level functions take a sql string, a list of params and optionally Postgrex options (:pool_timeout, :queue, :timeout, :decode_mapper, :pool)
+
+  ```ex
+  PgContrivance.Runner.query "SELECT name, email FROM USERS", []
+  ```
+
+See the docs for the return types. query/3 returns the same its  Postgrex counterpart: `{:ok, %Postgrex.Result{}}`
+or `{:error, %Postgrex.Error{}}`. query!/3 returns `%Postgrex.Result{}` or raises raises `Postgrex.Error` if
+there was an error.
+
+Transaction incorporates a rollback mechanism if there is an error but is called just like query/3:
+
+  ```ex
+  PgContrivance.Runner.transaction "UPDATE users SET email='bob@acme.com'", []
+  ```
