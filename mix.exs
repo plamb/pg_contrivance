@@ -19,8 +19,10 @@ defmodule PgContrivance.Mixfile do
   end
 
   def application do
-    [applications: [:logger, :postgrex],
-     mod: {PgContrivance, []}]
+    [
+      applications: [:logger, :postgrex],
+      mod: {PgContrivance.App, []}
+    ]
   end
 
   defp deps do
