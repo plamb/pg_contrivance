@@ -1,7 +1,7 @@
 defmodule PgContrivance do
 
   alias PgContrivance.SqlCommand
-  alias PgContrivance.Postgres
+  alias PgContrivance.Query
 
   @doc """
   Primary entry point to working with sql statements. Parameters can be
@@ -47,8 +47,7 @@ defmodule PgContrivance do
   """
 
   def query(%SqlCommand{} = cmd) do
-    {:ok, results} = Postgres.query(cmd.statement, cmd.params)
-    results
+    Query.query(cmd)
   end
 
 

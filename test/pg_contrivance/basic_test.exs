@@ -1,7 +1,7 @@
 defmodule PgContrivance.BasicTest do
   use ExUnit.Case
   import PgContrivance
-  alias PgContrivance.SqlCommand
+  #alias PgContrivance.SqlCommand
 
   test "basic select to list" do
     assert [%{"email" => "rob@test.com", "first" => "Rob", "last" => "Blah"},
