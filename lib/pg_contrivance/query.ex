@@ -18,20 +18,28 @@ defmodule PgContrivance.Query do
     results
   end
 
-
   def convert_named_params(query, params \\ []) do
-    named_param_regex = ~r/:(\w+)/i
+    named_param_regex = ~r/:\w+/i
 
     # do the regex and convert the results to a keyword list [:atom, string]
-    m = named_param_regex
-    |> Regex.scan(query) # [[":lname", "lname"], [":fname", "fname"]]
-    |> Enum.map(fn([value, atom]) -> {String.to_atom(atom), value} end) # [lname: ":lname", fname: ":fname"]
+    matches = named_param_regex # "SELECT * FROM users WHERE lname = :lname AND fname = :fname"
+    |> Regex.scan(query) # [[":lname"], [":fname"]]
+    |> List.flatten # [":lname", ":fname"]
 
     # replace the named params in the query with $1...$n
-    {q, _} = Enum.reduce(m, {query, 1}, fn({_,v}, {q, i}) -> {String.replace(q, v, "$#{i}"), i + 1 } end)
+    {q, _} = matches # [":lname", ":fname"]
+    |> Enum.reduce({query, 1},
+         fn(match, {q, i}) -> {String.replace(q, match, "$#{i}"), i + 1 } end)
+         # {"SELECT * FROM users WHERE lname = $1 AND fname = $2", 3}
 
     # create a list of options to be used as params
-    p = Enum.map(m, fn({k,_}) -> params[k]  end)
+    p = matches # [":lname", ":fname"]
+    |> Enum.map(fn(x) -> String.strip(x, ?:) |> String.to_atom end) #[:lname, :fname]
+    |> Enum.map(fn(a) -> params[a]  end)  # ["Brown", "Charlie"]
+
+    # we're not doing any checking to see if the params count matches the
+    # the number of params, basically this just lets the error get handled in
+    # postgres itself
 
     {q, p}
   end
