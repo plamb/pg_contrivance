@@ -56,28 +56,34 @@ Withing the connection key you can specify any of the normal Postgrex connection
 ## Basic Usage
 The api utilizes a %SqlCommand{} struct to make usage a bit more Elixir like (and will be quite familiar to Moebius users) that allow us to pipeline commands and results.
 
-  ```ex
-  sql "SELECT name, email FROM USERS"
-  |> query
-  |> to_list
+```ex
+sql "SELECT name, email FROM USERS"
+|> query
+|> to_list
 
-  query "SELECT name, email FROM USERS"
-  |> to_list
-
-  sql "SELECT name, email FROM users WHERE username = $1"
-  |> params ["bob@acme.com"]
-  |> query
-  |> to_list
-  ```
+sql "SELECT name, email FROM users WHERE username = $1"
+|> params ["bob@acme.com"]
+|> query
+|> to_list
+```
 
 With named parameter conversion:
 
-  ```ex
-  sql("SELECT name, email FROM users WHERE username = :username")
-  |> params(%{username: "bob@acme.com"})
-  |> query
-  |> to_list
-  ```
+```ex
+sql("SELECT name, email FROM users WHERE username = :username")
+|> params(%{username: "bob@acme.com"})
+|> query
+|> to_list
+```
+
+Using an eex template for the sql statement.
+
+```
+sql_from_template("SELECT * FROM <%= table %> WHERE id = :id", [table: "users"])
+|> params(%{id: 1})
+|> query
+|> to_list
+```
 
 
 ## Very Low-level API

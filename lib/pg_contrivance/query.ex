@@ -4,6 +4,13 @@ defmodule PgContrivance.Query do
 
 
   def query(%SqlCommand{} = cmd) do
+    # if we have a template, convert it to a statement first
+    cmd = if(cmd.template != "") do
+            s = EEx.eval_string(cmd.template, cmd.template_bindings, cmd.template_options)
+            %SqlCommand{cmd | statement: s}
+          else
+            cmd
+          end
     handle_query(cmd.statement, cmd.params)
   end
 

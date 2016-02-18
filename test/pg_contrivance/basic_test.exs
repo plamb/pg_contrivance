@@ -31,5 +31,14 @@ defmodule PgContrivance.BasicTest do
         |> to_list
   end
 
+  @template_query "SELECT first, last, email FROM <%= table %> WHERE id = :id"
+  @template_bindings [table: "users"]
 
+  test "template query with named parameters" do
+    assert [%{"email" => "rob@test.com", "first" => "Rob", "last" => "Blah"}] =
+        sql_from_template(@template_query, @template_bindings)
+        |> params(%{id: 1})
+        |> query
+        |> to_list
+  end
 end

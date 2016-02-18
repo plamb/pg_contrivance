@@ -4,7 +4,7 @@ defmodule PgContrivance do
   alias PgContrivance.Query
 
   @doc """
-  Primary entry point to working with sql statements. Parameters can be
+  Primary entry point to working with sql statements. Parameter placeholders can be
   either $1,$2...$n or atom format (:first, :last). When parameters are in
   atom format, a hash must be passed to the params function.
 
@@ -17,6 +17,19 @@ defmodule PgContrivance do
 
   def sql(statement) when is_binary(statement),
     do: %SqlCommand{statement: statement}
+
+  @doc """
+  Creates a sql query from an EEx template. Template bindings are passed as a
+  keyword list and options can be any of the normal EEx options.
+
+  ```ex
+  sql_from_template("SELECT * FROM <%= table %> WHERE id = :id", [table: "users"])
+  |> params(%{id: 1})
+  ```
+  """
+
+  def sql_from_template(template, bindings \\ [], options \\ []),
+    do: %SqlCommand{template: template, template_bindings: bindings, template_options: options}
 
 
   @doc """
