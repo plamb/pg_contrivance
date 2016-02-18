@@ -18,18 +18,18 @@ defmodule PgContrivance.Query do
     results
   end
 
-  def convert_named_params(query, params \\ []) do
+  def convert_named_params(statement, params \\ []) do
     named_param_regex = ~r/:\w+/i
 
     # do the regex and convert the results to a keyword list [:atom, string]
     matches = named_param_regex # "SELECT * FROM users WHERE lname = :lname AND fname = :fname"
-    |> Regex.scan(query) # [[":lname"], [":fname"]]
+    |> Regex.scan(statement) # [[":lname"], [":fname"]]
     |> List.flatten # [":lname", ":fname"]
 
     # replace the named params in the query with $1...$n
     {q, _} = matches # [":lname", ":fname"]
-    |> Enum.reduce({query, 1},
-         fn(match, {q, i}) -> {String.replace(q, match, "$#{i}"), i + 1 } end)
+    |> Enum.reduce({statement, 1},
+         fn(match, {q, i}) -> {String.replace(q, match, "$#{i}"), i + 1} end)
          # {"SELECT * FROM users WHERE lname = $1 AND fname = $2", 3}
 
     # create a list of options to be used as params

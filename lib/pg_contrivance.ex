@@ -35,11 +35,11 @@ defmodule PgContrivance do
   ```
   """
 
-  def params(%SqlCommand{} = cmd, params) when is_list(params),
-    do: %SqlCommand{cmd | params: params}
+  def params(%SqlCommand{} = cmd, parameters) when is_list(parameters),
+    do: %SqlCommand{cmd | params: parameters}
 
-  def params(%SqlCommand{} = cmd, params) when is_map(params),
-    do: %SqlCommand{cmd | params: params}
+  def params(%SqlCommand{} = cmd, parameters) when is_map(parameters),
+    do: %SqlCommand{cmd | params: parameters}
 
 
   @doc """
