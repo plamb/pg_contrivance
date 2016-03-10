@@ -6,6 +6,7 @@ defmodule PgContrivance.SqlCommand do
     statement: "",
     params: [],
     template: "",
+    template_filename: "",
     template_bindings: [],
     template_options: []
   ]

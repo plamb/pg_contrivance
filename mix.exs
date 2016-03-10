@@ -33,7 +33,7 @@ defmodule PgContrivance.Mixfile do
      {:earmark, "~> 0.2.0", only: [:dev, :docs]},
      {:inch_ex, ">= 0.0.0", only: :docs},
      # Test/Analysis
-     {:credo, "~> 0.3.3", only: [:dev, :test]},
+     {:credo, "~> 0.3.5", only: [:dev, :test]},
      # Optional
      {:sbroker, "~> 0.7", optional: true}]
   end

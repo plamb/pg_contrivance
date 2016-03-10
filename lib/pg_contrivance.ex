@@ -22,6 +22,9 @@ defmodule PgContrivance do
   Creates a sql query from an EEx template. Template bindings are passed as a
   keyword list and options can be any of the normal EEx options.
 
+  Note: This is a quite simple implementation and templates are not precompiled
+  and are evaluated each time they are used. This may change in the future.
+
   ```ex
   sql_from_template("SELECT * FROM <%= table %> WHERE id = :id", [table: "users"])
   |> params(%{id: 1})
@@ -30,6 +33,26 @@ defmodule PgContrivance do
 
   def sql_from_template(template, bindings \\ [], options \\ []),
     do: %SqlCommand{template: template, template_bindings: bindings, template_options: options}
+
+  @doc """
+  Creates a sql query from a file. The file can be plain sql text or an EEx template--all
+  files are evaluated as an EEx template though and should have a name that ends
+  in ``.sql.eex`. Template bindings are passed as a keyword list and options can
+  be any of the normal EEx options.
+
+  Note: This is a quite simple implementation and templates are not precompiled
+  and are evaluated each time they are used. This may change in the future.
+
+  ```ex
+  sql_from_file("users.sql.eex", [table: "users"])
+  |> params(%{id: 1})
+  |> query
+  ```
+  """
+
+  def sql_from_file(filename, bindings \\ [], options \\ []),
+    do: %SqlCommand{template_filename: filename, template_bindings: bindings, template_options: options}
+
 
 
   @doc """
