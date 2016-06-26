@@ -2,6 +2,10 @@ defmodule PgContrivance.BulkInserter do
   alias PgContrivance.Runner
 
 
+  def insert(values, table_name, columns) when is_list(columns) and is_list(values) do
+
+  end
+
   @doc """
   Insert multiple rows at once, within a single transaction, returning the inserted records. Pass in a composite list, containing the rows  to be inserted.
   Note, the columns to be inserted are defined based on the first record in the list. All records to be inserted must adhere to the same schema.
@@ -19,7 +23,7 @@ defmodule PgContrivance.BulkInserter do
   result = db(:people) |> insert(data)
   ```
   """
-  # 
+  #
   # def bulk_insert(%QueryCommand{} = cmd, list) when is_list(list) do
   #   # do this once and get a canonnical map for the records -
   #   column_map = list |> hd |> Keyword.keys

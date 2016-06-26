@@ -29,11 +29,11 @@ defmodule PgContrivance.Mixfile do
     [{:postgrex, github: "ericmj/postgrex"},
      {:poolboy, "~> 1.5"},
      # Docs
-     {:ex_doc, "~> 0.11.4", only: [:dev, :docs]},
+     {:ex_doc, "~> 0.11.5", only: [:dev, :docs]},
      {:earmark, "~> 0.2.0", only: [:dev, :docs]},
      {:inch_ex, ">= 0.0.0", only: :docs},
      # Test/Analysis
-     {:credo, "~> 0.3.5", only: [:dev, :test]},
+     {:credo, "~> 0.3.13", only: [:dev, :test]},
      # Optional
      {:sbroker, "~> 0.7", optional: true}]
   end

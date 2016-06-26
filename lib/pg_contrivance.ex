@@ -115,4 +115,10 @@ defmodule PgContrivance do
   end
 
 
+  @doc """
+  Bulk insert takes a table name, list of column names and a list of lists for the values to insert.
+  """
+  def bulk_insert(values, table_name, columns) do
+    PgContrivance.BulkInsert.insert(table_name, columns, values)
+  end
 end

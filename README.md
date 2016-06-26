@@ -1,21 +1,19 @@
 # PgContrivance
 
-This is a layer of useful tooling on
-top of [postgrex](https://github.com/ericmj/postgrex). For a high-level database wrapper look to [Ecto](https://github.com/elixir-lang/ecto) or alternatively at [Moebius](https://github.com/robconery/moebius) which does a good job of creating a direct, easy-to-use SQL dsl. PgContrivance looks to exploit Postgresql's capabilities without abstracting the SQL away, in fact, it pretty much revels in the glory of plain old SQL strings and looks to exploit Postgresql specific functionality.
+This is a small utility layer on
+top of [postgrex](https://github.com/ericmj/postgrex). For a high-level database wrapper look to [Ecto](https://github.com/elixir-lang/ecto) or alternatively at [Moebius](https://github.com/robconery/moebius) which does a good job of creating a direct, easy-to-use dsl. PgContrivance looks to exploit Postgresql's capabilities without abstracting the SQL away, in fact, it pretty much revels in the glory of plain old SQL and looks to exploit Postgresql specific functionality as much as possible.
 
-Much of PgContrivance was thought up as an addition to Moebius but I kept thinking that it would be best as a standalone library that was only dependent on Postgrex and useable standalone or in an Ecto app too.
+Originally, PgContrivance was thought up as an addition to Moebius, but I kept thinking that it would be best as a standalone library that was only dependent on Postgrex and useable standalone or in an Ecto app too.
 
 Functionality:
 
 - [x] execute sql queries with params
 - [x] execute sql queries with params with transaction
 - [ ] bulk insert
-- [ ] named parameters in query strings
-- [ ] work with [Geo](https://github.com/bryanjos/geo)
-- [ ] eex sql templates
-- [ ] sql from files
+- [x] named parameters in query strings
+- [x] eex sql templates
+- [x] sql from files
 - [ ] much more...
-
 
 
 ## Warning/Versions
@@ -48,9 +46,9 @@ You'll need to have a configuration block for the database connection.
         config :pg_contrivance, MyApplication.MyDb
           connection: [database: "contrived", pool_mod: DBConnection.Poolboy]
 
-Withing the connection key you can specify any of the normal Postgrex connection options.
+Within the connection key you can specify any of the normal Postgrex connection options.
 
-[Note: You will need to specify the pool_mod-this will become a default soon].
+[Note: You will need to specify the pool_mod.]
 
 
 ## Basic Usage
@@ -85,6 +83,13 @@ sql_from_template("SELECT * FROM <%= table %> WHERE id = :id", [table: "users"])
 |> to_list
 ```
 
+Bulk insert from a list of lists and a list of columns.
+
+```
+columns = ["a", "b", "c"]
+values = [[1,2,3],[4,5,6],[7,8,9]]
+bulk_insert("table_name", columns, values)
+```
 
 ## Very Low-level API
 At it's most basic PgContrivance is a VERY thin wrapper around Postgrex.query, query! and transaction. All of the low-level functions take a sql string, a list of params and optionally Postgrex options (:pool_timeout, :queue, :timeout, :decode_mapper, :pool)
