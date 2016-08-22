@@ -17,9 +17,9 @@ Functionality:
 
 
 ## Warning/Versions
-This is very much in development and highly dependent on [postgrex](https://github.com/ericmj/postgrex). PgContrivance uses Postgrex v0.11 but as functionality evolves and changes there, it may cause breaking changes here. As time goes on, I will try to keep a feature matrix of what versions work with what version of Postgrex.
+This is very much in development and highly dependent on [postgrex](https://github.com/elixir-ecto/postgrex). Warning: PgContrivance presently uses the master branch of Postgrex and requires Elixir 1.3. The Postgrex extensions to handle the Calender types from Elixir 1.3 are enable by default too.
 
-Right now I'm using a version scheme like postgrex-major.postgrex-minor-contrivance-version. i.e. 0.11.1. This is very much subject to change.
+Right now I'm using a version scheme like postgrex-major.postgrex-minor-contrivance-version. i.e. 0.11.3. This is very much subject to change.
 
 
 ## Installation
@@ -30,7 +30,7 @@ The package is not in Hex yet, it can be used by accessing it from github:
 
         def deps do
           [{:pg_contrivance, github: "plamb/pg_contrivance"},
-           {:postgrex, "~> 0.11"},
+           {:postgrex, github: "elixir-ecto/postgrex"}
            {:poolboy, "~> 1.5"}]
         end
 
@@ -44,7 +44,7 @@ The package is not in Hex yet, it can be used by accessing it from github:
 You'll need to have a configuration block for the database connection.
 
         config :pg_contrivance, MyApplication.MyDb
-          connection: [database: "contrived", pool_mod: DBConnection.Poolboy]
+          connection: [database: "contrived", pool_mod: DBConnection.Poolboy, extensions: [{Postgrex.Extensions.Calendar, []}]]
 
 Within the connection key you can specify any of the normal Postgrex connection options.
 
@@ -109,4 +109,4 @@ Transaction incorporates a rollback mechanism if there is an error but is called
 
 
   ## Acknowledgements
-  Initially PgContrivance steals/copies and liberally imitates concepts from [Moebius](https://github.com/robconery/moebius), particularly the Moebius.Runner and bulk-insert code (thanks [John Atten](https://github.com/xivSolutions)). If it wasn't for Rob's (both [Conery](https://github.com/robconery) and [Sullivan](https://github.com/datachomp)) and [Johnny Winn](https://github.com/nurugger07) I would have never even thought about pursing my own thoughts of how I wanted a library to work or even started to code it. Their "I can do anything" attitude is quite infectious.
+  Initially PgContrivance steals/copies and liberally imitates concepts from [Moebius](https://github.com/robconery/moebius), particularly the Moebius.Runner and bulk-insert code (thanks [John Atten](https://github.com/xivSolutions)). If it wasn't for Rob's (both [Conery](https://github.com/robconery) and [Sullivan](https://github.com/datachomp)) and [Johnny Winn](https://github.com/nurugger07) I would have never even thought about pursing my own thoughts of how I wanted a library to work or even started to code it. They have an "I can do anything" attitude is quite infectious.

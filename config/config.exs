@@ -3,4 +3,10 @@
 use Mix.Config
 
 #The JSON extension is required and is hot-loaded by the connection
-config :pg_contrivance, connection: [database: "contrived", pool_mod: DBConnection.Poolboy], scripts: "test/db"
+config :pg_contrivance,
+  connection:
+    [ database: "contrived",
+      extensions: [{Postgrex.Extensions.Calendar, []}],
+      pool_mod: DBConnection.Poolboy
+    ],
+    scripts: "test/db"
