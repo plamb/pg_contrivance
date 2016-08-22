@@ -74,6 +74,28 @@ defmodule PgContrivance.Postgres do
     Postgrex.query!(@name, statement, params, opts)
   end
 
+  # def prepare(statement, opts \\ []) do
+  #   Postgrex.prepare(@name, statement, opts)
+  # end
+  #
+  # def prepare!(statement, opts \\ []) do
+  #   Postgrex.prepare!(@name, statement, opts)
+  # end
+
+  # def bulk_insert(values, table, columns, opts \\ []) when is_list(values) and is_binary(table) and is_binary(columns) do
+  #   sql = "INSERT INTO #{table} (#{columns}) VALUES "
+  #   result = Postgrex.transaction(@name, fn(conn) ->
+  #             #Postgrex.query(conn, statement, values, opts)
+  #             # split the records into command batches that won't overwhelm postgres
+  #             Enum.chunk(values, max_rows_in_batch(columns))
+  #             #|> Enum.map(fn(v) -> insert_chunk(v, table_name, columns) end)
+  #
+  #            end)
+  #
+  # end
+
+
+
   def transaction(statement, params, opts \\ []) when is_binary(statement) and is_list(params) do
     case Postgrex.transaction(@name, fn(conn) -> Postgrex.query(conn, statement, params, opts) end) do
       {:ok, result} -> result

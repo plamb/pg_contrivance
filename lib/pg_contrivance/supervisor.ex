@@ -3,8 +3,12 @@ defmodule PgContrivance.Supervisor do
 
   use Supervisor
 
-  def start_link(_type, _args) do
+  def start_link() do
     :supervisor.start_link(__MODULE__, [])
+  end
+
+  def start_link(_type, _args) do
+    start_link()
   end
 
   def init([]) do

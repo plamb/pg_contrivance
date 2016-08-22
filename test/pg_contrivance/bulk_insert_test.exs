@@ -1,8 +1,22 @@
 defmodule PgContrivance.BulkInsertTest do
   use ExUnit.Case
 
-  # import Moebius.BulkInsert
+  import PgContrivance.BulkInserter
   # import PgContrivance.Postgres
+
+  test "generate params and query" do
+    values = [[1,2,3,4,5,6],[7,8,9,10,11,12],[13,14,15,16,17,18]]
+    table = "people"
+    columns = ["first_name", "last_name", "address", "city", "state", "zip"]
+
+    expected_params = ["($1,$2,$3,$4,$5,$6)", "($7,$8,$9,$10,$11,$12)", "($13,$14,$15,$16,$17,$18)"]
+    expected_values = ["(1,2,3,4,5,6)", "(7,8,9,10,11,12)","(13,14,15,16,17,18)"]
+    expected_query = "INSERT INTO people (first_name, last_name, address, city, state, zip) VALUES ($1,$2,$3,$4,$5,$6)($7,$8,$9,$10,$11,$12)($13,$14,$15,$16,$17,$18);"
+
+    assert generate_params([3], values, 6)== expected_params
+    # assert encode_values(values) == expected_values
+    # assert queries(values, table, columns) == expected_query
+  end
 
   # setup do
   #   "drop table if exists people" |> run

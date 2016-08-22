@@ -83,12 +83,11 @@ sql_from_template("SELECT * FROM <%= table %> WHERE id = :id", [table: "users"])
 |> to_list
 ```
 
-Bulk insert from a list of lists and a list of columns.
+Bulk insert from a list of lists and a list of columns names.
 
 ```
-columns = ["a", "b", "c"]
-values = [[1,2,3],[4,5,6],[7,8,9]]
-bulk_insert("table_name", columns, values)
+[[1,2,3],[4,5,6],[7,8,9]]
+|> bulk_insert("table_name", ["a", "b", "c"])
 ```
 
 ## Very Low-level API
