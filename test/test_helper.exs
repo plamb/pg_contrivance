@@ -43,6 +43,9 @@ insert into users(email, first, last) values('rob@test.com','Rob','Blah');
 insert into users(email, first, last) values('jill@test.com','Jill','Gloop');
 insert into users(email, first, last) values('mary@test.com','Mary','Muggtler');
 insert into users(email, first, last) values('mike@test.com','Mike','Ghruoisl');
+insert into logs(user_id, log) values (1, 'log 1');
+insert into logs(user_id, log) values (1, 'log 2');
+
 "
 
 case PgContrivance.Psql.run_with_psql sql do
